@@ -1,0 +1,29 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "argsIgnorePattern": "^_"
+    }],
+    "sort-vars": 2,
+    "quotes": [
+      "error",
+      "double"
+    ]
+  }
+}

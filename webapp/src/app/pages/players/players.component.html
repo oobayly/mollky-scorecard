@@ -1,0 +1,9 @@
+<div class="container">
+  <div class="my-2">
+    <button type="button" class="mx-0" mdbBtn color="indigo" mdbWavesEffect (click)="onAddPlayerClick()">
+      Add Player
+    </button>
+  </div>
+
+  <app-players-list #playerList [canEdit]="true"></app-players-list>
+</div>

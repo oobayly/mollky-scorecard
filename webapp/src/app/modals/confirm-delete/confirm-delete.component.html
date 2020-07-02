@@ -1,0 +1,21 @@
+<div class="modal-content text-center">
+  <!--Header-->
+  <div class="modal-header d-flex justify-content-center">
+    <mdb-icon fas icon="times" size="3x" class="white-text"></mdb-icon>
+  </div>
+
+  <!--Body-->
+  <div class="modal-body">
+    <p class="">{{message}}</p>
+  </div>
+
+  <!--Footer-->
+  <div class="modal-footer justify-content-center">
+    <button type="button" mdbBtn color="dark" outline="true" class="waves-effect" mdbWavesEffect (click)="hide(false)">
+      No
+    </button>
+    <button mdbBtn color="danger" class="waves-effect" mdbWavesEffect (click)="hide(true)">
+      Yes
+    </button>
+  </div>
+</div>

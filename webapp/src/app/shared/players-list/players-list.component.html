@@ -1,0 +1,25 @@
+<ul class="list-group">
+  <li class="list-group-item d-flex align-items-center" *ngFor="let item of players | async; let i = index"
+    (click)="onPlayerClick($event, item)">
+
+    <div class="mr-auto">{{item.name}}</div>
+
+    <div class="ml-2" *ngIf="canEdit">
+      <button type="button" class="p-1 ml-0" mdbBtn color="indigo" outline="true" mdbWavesEffect
+        (click)="onPlayerEditClick($event, item)">
+        <mdb-icon class="" fas icon="user-edit"></mdb-icon>
+      </button>
+      <button type="button" class="p-1 ml-0" mdbBtn color="danger" outline="true" mdbWavesEffect
+        (click)="onPlayerDeleteClick($event, item)">
+        <mdb-icon class="" fas icon="user-times"></mdb-icon>
+      </button>
+    </div>
+
+    <div class="custom-control custom-switch ml-0" *ngIf="canSelect" (click)="$event.stopPropagation()">
+      <input type="checkbox" class="custom-control-input" [id]="'player-toggle-' + i"
+        (change)="onPlayerCheckChange($event, item)">
+      <label class="custom-control-label" [for]="'player-toggle-' + i"></label>
+    </div>
+
+  </li>
+</ul>

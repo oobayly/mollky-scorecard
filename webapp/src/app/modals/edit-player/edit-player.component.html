@@ -1,0 +1,40 @@
+<div class="modal-content">
+  <div class="modal-header">
+
+    <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
+      <span aria-hidden="true">×</span>
+    </button>
+
+    <h4 class="modal-title w-100">
+      <span *ngIf="isEditing">Edit Player</span>
+      <span *ngIf="!isEditing">Add Player</span>
+    </h4>
+  </div>
+
+  <div class="modal-body">
+
+    <!-- Name -->
+    <div class="md-form">
+      <input mdbInput #playerName type="text" class="form-control" placeholder="The name of the player." [(ngModel)]="player.name">
+      <label class="">Player Name:</label>
+    </div>
+
+    <!-- Avatar -->
+    <div class="md-form">
+      <input mdbInput type="number" class="form-control" min="0" max="10" placeholder="The maximum allowed misses." [(ngModel)]="player.maxMisses">
+      <label class="">Allowed Misses:</label>
+    </div>
+
+  </div>
+
+  <div class="modal-footer justify-content-center">
+    <button type="button" mdbBtn color="dark" outline="true" class="waves-light" aria-label="Close" (click)="hide()"
+      mdbWavesEffect>
+      Cancel
+    </button>
+    <button type="button" mdbBtn color="indigo" class="relative waves-light" mdbWavesEffect
+      (click)="onSaveClick($event)">
+      Save
+    </button>
+  </div>
+</div>
