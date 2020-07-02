@@ -11,6 +11,12 @@ import { Player } from "../../core/model";
 import { StorageService } from "../../core/services/storage.service";
 import { map } from "rxjs/operators";
 
+export interface PlayerCheckEvent {
+  checked: boolean;
+ 
+  player: Player;
+}
+
 @Component({
   selector: "app-players-list",
   templateUrl: "./players-list.component.html",
@@ -26,6 +32,9 @@ export class PlayersListComponent {
   public canSelect = false;
 
   public readonly checkedPlayers: Observable<Player[]>;
+
+  @Output()
+  public playerCheck = new EventEmitter<PlayerCheckEvent>();
 
   @Output()
   public playerClick = new EventEmitter<Player>();
@@ -59,6 +68,11 @@ export class PlayersListComponent {
     }
 
     this.checkedIds.next(list);
+
+    this.playerCheck.emit({
+      checked: input.checked,
+      player: item,
+    });
   }
 
   public onPlayerClick(e: Event, item: Player): void {

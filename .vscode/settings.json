@@ -14,5 +14,6 @@
       "package",
       "relativeDownLevel",
       "relativeUpLevel"
-    ]
+    ],
+    "typescript.preferences.importModuleSpecifier": "relative"
 }

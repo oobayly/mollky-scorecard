@@ -1,5 +1,8 @@
-/** Represents a player. */
+/** Represents a game. */
 export interface Game {
+  /** The index of the current player. */
+  currentPlayer: number;
+
   /** The date of the game. */
   date: Date;
 
@@ -8,6 +11,12 @@ export interface Game {
 
   /** The list of players in the game. */
   players: PlayerRecord[];
+
+  /** The score that a player is reset to when they exceed the target. */
+  resetScore: number;
+
+  /** The target score. */
+  targetScore: number;
 
   /** The player that won the game. */
   winner?: Player;
@@ -30,9 +39,15 @@ export interface Player {
 
 /** Represents a record of scores */
 export interface PlayerRecord {
+  /** The number of misses. */
+  misses: number;
+
   /** The player. */
   player: Player;
 
+  /** The current score. */
+  score: number;
+
   /** The list of scores. */
-  score: number[];
+  scores: number[];
 }

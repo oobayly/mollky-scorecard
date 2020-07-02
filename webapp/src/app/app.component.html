@@ -6,10 +6,22 @@
   <links>
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{'exact': true}">
-        <a class="nav-link waves-light" routerLink="/" mdbWavesEffect>Home</a>
+        <a class="nav-link waves-light" routerLink="/" mdbWavesEffect>
+          <mdb-icon fas icon="home" class="mr-1"></mdb-icon>
+          Home
+        </a>
       </li>
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link waves-light" routerLink="/players" mdbWavesEffect>Players</a>
+        <a class="nav-link waves-light" routerLink="/players" mdbWavesEffect>
+          <mdb-icon fas icon="user" class="mr-1"></mdb-icon>
+          Players
+        </a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link waves-light" routerLink="/game/new" mdbWavesEffect>
+          <mdb-icon fas icon="dice-d20" class="mr-1"></mdb-icon>
+          New Game
+        </a>
       </li>
     </ul>
   </links>

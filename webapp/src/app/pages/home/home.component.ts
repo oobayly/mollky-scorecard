@@ -1,4 +1,8 @@
 import { Component } from "@angular/core";
+import { Game } from "../../core/model";
+import { Observable } from "rxjs";
+import { StorageService } from "../../core/services/storage.service";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-home",
@@ -6,4 +10,15 @@ import { Component } from "@angular/core";
   styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent {
+  public readonly openGames: Observable<Game[]>;
+
+  constructor(
+    private storage: StorageService
+  ) {
+    this.openGames = this.storage.games.pipe(
+      map((games) => {
+        return games.filter((x) => !x.winner);
+      })
+    );
+  }
 }

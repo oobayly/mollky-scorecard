@@ -1,31 +1,27 @@
-import {
-  ButtonsModule,
-  IconsModule,
-  MDBBootstrapModule,
-  ModalModule,
-  NavbarModule,
-} from "angular-bootstrap-md";
+import { LOCALE_ID, NgModule } from "@angular/core";
 
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
-import { ConfirmDeleteComponent } from "./modals/confirm-delete/confirm-delete.component";
-import { EditPlayerComponent } from "./modals/edit-player/edit-player.component";
 import { FormsModule } from "@angular/forms";
 import { HomeComponent } from "./pages/home/home.component";
-import { NgModule } from "@angular/core";
+import {
+  MDBBootstrapModule,
+} from "angular-bootstrap-md";
+import { ModalsModule } from "./modals/modals.module";
 import { PlayersComponent } from "./pages/players/players.component";
-import { PlayersListComponent } from "./shared/players-list/players-list.component";
+import { SharedModule } from "./shared/shared.module";
+import localeGB from "@angular/common/locales/en-GB"
+import { registerLocaleData } from "@angular/common";
+
+registerLocaleData(localeGB);
 
 @NgModule({
   declarations: [
     AppComponent,
-    EditPlayerComponent,
     HomeComponent,
     PlayersComponent,
-    PlayersListComponent,
-    ConfirmDeleteComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,21 +30,18 @@ import { PlayersListComponent } from "./shared/players-list/players-list.compone
     FormsModule,
     // MDB
     MDBBootstrapModule.forRoot(),
-    ButtonsModule,
-    IconsModule,
-    ModalModule,
-    NavbarModule,
+    // 
+    ModalsModule,
+    SharedModule,
   ],
   exports: [
-    // MDB
-    ButtonsModule,
-    IconsModule,
-    ModalModule,
-    NavbarModule,
-    // Components
-    PlayersListComponent,
+    //
+    ModalsModule,
+    SharedModule,
   ],
-  providers: [],
+  providers: [
+    { provide: LOCALE_ID, useValue: navigator.language },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

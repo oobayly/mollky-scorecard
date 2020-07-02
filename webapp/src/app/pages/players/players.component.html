@@ -1,6 +1,18 @@
+<mdb-breadcrumb>
+  <mdb-breadcrumb-item>
+    <mdb-icon fas icon="home" class="mr-1"></mdb-icon>
+    <a routerLink="/">Home</a>
+  </mdb-breadcrumb-item>
+  <mdb-breadcrumb-item class="active">
+    <mdb-icon fas icon="user" class="mr-1"></mdb-icon>
+    Players
+  </mdb-breadcrumb-item>
+</mdb-breadcrumb>
+
 <div class="container">
-  <div class="my-2">
+  <div class="mb-2">
     <button type="button" class="mx-0" mdbBtn color="indigo" mdbWavesEffect (click)="onAddPlayerClick()">
+      <mdb-icon fas icon="user-plus" class="mr-1"></mdb-icon>
       Add Player
     </button>
   </div>

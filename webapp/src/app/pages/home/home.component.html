@@ -1,1 +1,36 @@
-<p>home works!</p>
+<mdb-breadcrumb>
+  <mdb-breadcrumb-item class="active">
+    <mdb-icon fas icon="home" class="mr-1"></mdb-icon>
+    Home
+  </mdb-breadcrumb-item>
+</mdb-breadcrumb>
+
+<div class="container">
+  <div class="my-2">
+    <a class="mx-0" mdbBtn color="indigo" routerLink="/game/new">
+      <mdb-icon fas icon="dice-d20" class="mr-1"></mdb-icon>
+      Start New Game
+    </a>
+  </div>
+</div>
+
+<div class="container" *ngIf="openGames | async as games">
+  <div *ngIf="games.length">
+    <h5>Open Games</h5>
+
+    <ul class="list-group">
+      <a routerLink="/game/{{game.id}}" class="list-group-item list-group-item-action" *ngFor="let game of games">
+        <div class="font-weight-bold">
+          <mdb-icon fas icon="dice-d20" class="pr-1"></mdb-icon>
+          Started on {{game.date | date: "short"}}
+        </div>
+        <div>
+          <!-- <mdb-icon fas icon="user" class="pr-1"></mdb-icon> -->
+          <span class="game-players">
+            <span class="text-smaller" *ngFor="let player of game.players">{{player.player.name}}</span>
+          </span>
+        </div>
+      </a>
+    </ul>
+  </div>
+</div>
