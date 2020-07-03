@@ -12,21 +12,23 @@
   </div>
 
   <!-- Body -->
-  <div class="modal-body">
+  <form class="modal-body" [formGroup]="playerForm">
 
     <!-- Name -->
     <div class="md-form">
-      <input mdbInput #playerName type="text" class="form-control" placeholder="The name of the player." [(ngModel)]="player.name">
+      <input mdbInput #playerName type="text" class="form-control" placeholder="The name of the player."
+        formControlName="name" [ngClass]="{'invalid': !playerForm.controls.name.valid}">
       <label class="">Player Name:</label>
     </div>
 
     <!-- Avatar -->
     <div class="md-form">
-      <input mdbInput type="number" class="form-control" min="0" max="10" placeholder="The maximum allowed misses." [(ngModel)]="player.maxMisses">
+      <input mdbInput type="number" class="form-control" min="0" max="10" placeholder="The maximum allowed misses."
+        formControlName="maxMisses" [ngClass]="{'invalid': !playerForm.controls.maxMisses.valid}">
       <label class="">Allowed Misses:</label>
     </div>
 
-  </div>
+  </form>
 
   <!-- Footer -->
   <div class="modal-footer justify-content-center">
@@ -35,7 +37,7 @@
       Cancel
     </button>
     <button type="button" mdbBtn color="indigo" class="relative waves-light" mdbWavesEffect
-      (click)="onSaveClick($event)">
+      (click)="onSaveClick($event)" [disabled]="!playerForm.valid">
       Save
     </button>
   </div>
