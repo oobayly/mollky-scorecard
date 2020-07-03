@@ -39,6 +39,18 @@ export class StorageService {
     return JSON.parse(json) as T;
   }
 
+  public removeGame(id: string): void {
+    const list = this._games.getValue();
+    const index = list.findIndex((x) => x.id === id);
+
+    if (index !== -1) {
+      list.splice(index, 1);
+    }
+
+    this.setStorageItem(StorageService.KEY_GAMES, list);
+    this._games.next(list);
+  }
+
   public removePlayer(id: string): void {
     const list = this._players.getValue();
     const index = list.findIndex((x) => x.id === id);

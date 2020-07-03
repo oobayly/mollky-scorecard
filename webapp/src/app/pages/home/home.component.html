@@ -19,16 +19,28 @@
     <h5>Open Games</h5>
 
     <ul class="list-group">
-      <a routerLink="/game/{{game.id}}" class="list-group-item list-group-item-action" *ngFor="let game of games">
-        <div class="font-weight-bold">
-          <mdb-icon fas icon="dice-d20" class="pr-1"></mdb-icon>
-          Started on {{game.date | date: "short"}}
+      <a routerLink="/game/{{game.id}}" class="list-group-item list-group-item-action d-flex"
+        *ngFor="let game of games">
+        <!-- Label -->
+        <div class="flex-grow-1">
+          <div class="font-weight-bold">
+            <mdb-icon fas icon="dice-d20" class="pr-1"></mdb-icon>
+            Started on {{game.date | date: "short"}}
+          </div>
+          <div>
+            <!-- <mdb-icon fas icon="user" class="pr-1"></mdb-icon> -->
+            <span class="game-players">
+              <span class="text-smaller" *ngFor="let player of game.players">{{player.player.name}}</span>
+            </span>
+          </div>
         </div>
-        <div>
-          <!-- <mdb-icon fas icon="user" class="pr-1"></mdb-icon> -->
-          <span class="game-players">
-            <span class="text-smaller" *ngFor="let player of game.players">{{player.player.name}}</span>
-          </span>
+
+        <!-- Buttons -->
+        <div class="ml-4">
+          <button type="button" class="p-1 ml-0" mdbBtn color="danger" outline="true" mdbWavesEffect
+            (click)="onGameDeleteclick($event, game)">
+            <mdb-icon class="" fas icon="times"></mdb-icon>
+          </button>
         </div>
       </a>
     </ul>
