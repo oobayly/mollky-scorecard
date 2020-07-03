@@ -7,7 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "eslint -c .eslintrc.json --ext .ts src",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build-prod": "ng build --prod",
+    "firebase-copy": "npm run build-prod && rsync -var --delete dist/webapp/* ../firebase/public"
   },
   "private": true,
   "dependencies": {
