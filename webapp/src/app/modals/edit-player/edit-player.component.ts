@@ -21,7 +21,7 @@ export class EditPlayerComponent implements AfterViewInit {
   @ViewChild("playerName")
   public playerName: ElementRef;
 
-  constructor(
+  public constructor(
     private modalRef: MDBModalRef,
     private storage: StorageService
   ) {
@@ -32,7 +32,7 @@ export class EditPlayerComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     setTimeout(() => {
       this.playerName.nativeElement.focus();
     })

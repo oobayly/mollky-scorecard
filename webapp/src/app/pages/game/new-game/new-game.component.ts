@@ -26,7 +26,7 @@ export class NewGameComponent implements AfterViewInit, OnDestroy {
   @ViewChild("playerList")
   public playerList: PlayersListComponent;
 
-  constructor(
+  public constructor(
     private router: Router,
     private storage: StorageService
   ) {
@@ -40,11 +40,11 @@ export class NewGameComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     const checkedSub = this.playerList.checkedPlayers.subscribe(
       (players) => {
         this.game.players = players.map((x) => {

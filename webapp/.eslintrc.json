@@ -17,13 +17,14 @@
         "max": 1
       }
     ],
-    "@typescript-eslint/no-unused-vars": ["error", {
-      "argsIgnorePattern": "^_"
-    }],
     "sort-vars": 2,
     "quotes": [
       "error",
       "double"
-    ]
+    ],
+    "@typescript-eslint/explicit-member-accessibility": 2,
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "argsIgnorePattern": "^_"
+    }]
   }
 }

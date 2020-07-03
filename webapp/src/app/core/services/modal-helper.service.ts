@@ -1,14 +1,16 @@
+import { Player, PlayerRecord } from "../model";
+
 import { ConfirmDeleteComponent } from "../../modals/confirm-delete/confirm-delete.component";
 import { EditPlayerComponent } from "../../modals/edit-player/edit-player.component";
+import { EditScoreComponent } from "../../modals/edit-score/edit-score.component";
 import { Injectable } from "@angular/core";
 import { MDBModalService } from "angular-bootstrap-md";
-import { Player } from "../model";
 
 @Injectable({
   providedIn: "root",
 })
 export class ModalHelperService {
-  constructor(
+  public constructor(
     private modal: MDBModalService,
   ) {
   }
@@ -24,6 +26,24 @@ export class ModalHelperService {
       component.setPlayer(player);
     }
 
+    return new Promise<void>((resolve) => {
+      const sub = this.modal.closed.subscribe(() => {
+        sub.unsubscribe();
+
+        resolve();
+      })
+    });
+  }
+
+  public async showEditScore(gameId: string, record: PlayerRecord): Promise<void> {
+    const ref = this.modal.show(EditScoreComponent, {
+      "class": "modal-dialog-centered",
+    });
+
+    const component = ref.content as EditScoreComponent;
+
+    component.setPlayerRecord(gameId, record);
+ 
     return new Promise<void>((resolve) => {
       const sub = this.modal.closed.subscribe(() => {
         sub.unsubscribe();

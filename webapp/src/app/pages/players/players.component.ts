@@ -16,12 +16,12 @@ export class PlayersComponent implements AfterViewInit {
 
   public checkedPlayers: Observable<Player[]>;
 
-  constructor(
+  public constructor(
     private modal: ModalHelperService
   ) {
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     setTimeout(() => {
       this.checkedPlayers = this.playerList.checkedPlayers;
     });

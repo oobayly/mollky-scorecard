@@ -41,7 +41,7 @@ export class PlayersListComponent {
 
   public readonly players: Observable<Player[]>;
 
-  constructor(
+  public constructor(
     private modalHelper: ModalHelperService,
     private storage: StorageService
   ) {

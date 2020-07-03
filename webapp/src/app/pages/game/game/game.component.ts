@@ -1,7 +1,8 @@
 import { ActivatedRoute, Router } from "@angular/router";
-import { Game, Player, PlayerRecord } from "../../../core/model";
+import { Game, PlayerRecord, calculateScore } from "../../../core/model";
 
 import { Component } from "@angular/core";
+import { ModalHelperService } from "../../../core/services/modal-helper.service";
 import { StorageService } from "../../../core/services/storage.service";
 import { first } from "rxjs/operators";
 
@@ -30,7 +31,8 @@ export class GameComponent {
 
   public game: Game;
 
-  constructor(
+  public constructor(
+    private modalHelper: ModalHelperService,
     private route: ActivatedRoute,
     router: Router,
     private storage: StorageService
@@ -46,22 +48,6 @@ export class GameComponent {
         router.navigateByUrl("/");
       }
     });
-  }
-
-  private calculateScore(player: PlayerRecord): number {
-    const score = player.scores.reduce((total, value) => {
-      total += value;
-
-      if (total > this.game.targetScore) {
-        total = this.game.resetScore;
-      }
-
-      return total;
-    }, 0);
-
-    player.score = score;
-
-    return score;
   }
 
   private clearPins(): void {
@@ -112,25 +98,21 @@ export class GameComponent {
     this.clearPins();
   }
 
-  public onPlayerClick(_e: Event, _player: Player): void {
+  public async onPlayerClick(_e: Event, record: PlayerRecord): Promise<void> {
+    await this.modalHelper.showEditScore(this.game.id, record);
   }
 
   public onSaveClick(_e: Event): void {
     const score = this.getScore();
-    const player = this.game.players[this.game.currentPlayer];
+    const record = this.game.players[this.game.currentPlayer];
 
-    player.scores.push(score);
-    this.calculateScore(player);
+    record.scores.push(score);
+    calculateScore(record, this.game.targetScore, this.game.resetScore);
+
     this.clearPins();
 
-    if (score) {
-      player.misses = 0;
-    } else {
-      player.misses++;
-    }
-
-    if ((player.score === this.game.targetScore) && !this.game.winner) {
-      this.game.winner = player.player;
+    if ((record.score === this.game.targetScore) && !this.game.winner) {
+      this.game.winner = record.player;
     }
 
     this.nextPlayer();

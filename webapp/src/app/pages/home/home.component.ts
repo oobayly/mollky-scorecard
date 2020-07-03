@@ -12,7 +12,7 @@ import { map } from "rxjs/operators";
 export class HomeComponent {
   public readonly openGames: Observable<Game[]>;
 
-  constructor(
+  public constructor(
     private storage: StorageService
   ) {
     this.openGames = this.storage.games.pipe(

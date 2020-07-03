@@ -51,3 +51,31 @@ export interface PlayerRecord {
   /** The list of scores. */
   scores: number[];
 }
+
+/** Calculates the current score for the specified record in the game. */
+export function calculateScore(record: PlayerRecord, targetScore: number, resetScore: number): number {
+  record.score = record.scores.reduce((total, value) => {
+    total += value;
+
+    if (total > targetScore) {
+      total = resetScore;
+    }
+
+    return total;
+  }, 0);
+
+  const len = record.scores.length;
+  let misses = 0;
+
+  for (let i = len - 1; i >= 0; i--) {
+    if (record.scores[i] !== 0) {
+      break;
+    }
+
+    misses++;
+  }
+
+  record.misses = misses;
+
+  return record.score;
+}

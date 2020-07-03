@@ -13,7 +13,7 @@ export class ConfirmDeleteComponent {
 
   public response = false;
 
-  constructor(
+  public constructor(
     private modal: MDBModalRef
   ) {
   }

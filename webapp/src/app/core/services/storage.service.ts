@@ -1,7 +1,8 @@
-import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { v4 as uuidv4 } from "uuid";
 import { Game, Player } from "../model";
+
+import { Injectable } from "@angular/core";
+import { v4 as uuidv4 } from "uuid";
 
 @Injectable({
   providedIn: "root",
@@ -23,7 +24,7 @@ export class StorageService {
     return this._players;
   }
 
-  constructor() {
+  public constructor() {
     this._players = new BehaviorSubject<Player[]>(this.getStorageItem<Player[]>(StorageService.KEY_PLAYERS, []));
     this._games = new BehaviorSubject<Game[]>(this.getStorageItem<Game[]>(StorageService.KEY_GAMES, []));
   }

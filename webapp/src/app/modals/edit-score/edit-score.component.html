@@ -1,0 +1,35 @@
+<div class="modal-content" *ngIf="scoreForm">
+  <!--Header-->
+  <div class="modal-header">
+    <h4 class="modal-title">Edit score for {{playerName}}</h4>
+
+    <button type="button" class="close pull-right" aria-label="Close" (click)="hide()">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+
+  <!--Body-->
+  <div class="modal-body">
+    <form class="">
+      <div class="md-form input-group mb-1" *ngFor="let control of scoreForm.controls; let i = index">
+        <div class="input-group-prepend">
+          <span class="input-group-text">#{{i + 1}}</span>
+        </div>
+
+        <input type="number" mdbInput class="form-control" [formControl]="control"
+          placeholder="Score for round {{i + 1}}" [ngClass]="{'invalid': !control.valid}">
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer justify-content-center">
+    <button type="button" mdbBtn color="dark" outline="true" class="waves-light" aria-label="Close" (click)="hide()"
+      mdbWavesEffect>
+      Cancel
+    </button>
+    <button type="button" mdbBtn color="indigo" class="relative waves-light" mdbWavesEffect
+      [disabled]="!scoreForm.valid" (click)="onSaveClick($event)">
+      Save
+    </button>
+  </div>
+</div>
