@@ -25,6 +25,10 @@ export class HomeComponent {
   ) {
   }
 
+  public async onAddPlayerClick(): Promise<void> {
+    await this.modalHelper.showEditPlayer();
+  }
+
   public onGameDeleteclick(e: Event, game: Game): void {
     this.modalHelper.showDelete("Are you sure you want to delete this game?")
       .then((response) => {
