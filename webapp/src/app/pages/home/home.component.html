@@ -14,7 +14,25 @@
   </div>
 </div>
 
-<div class="container" *ngIf="openGames | async as games">
+<!-- League table -->
+<div class="container mt-4" *ngIf="leagueTable | async as table">
+  <div *ngIf="table.length">
+    <h5>League Table</h5>
+
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let player of table">
+        <span>{{player.player.name}}</span>
+
+        <span class="float-right">
+          <mdb-badge pill="true" primary="true">{{player.wins}}</mdb-badge>
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Open games -->
+<div class="container mt-4" *ngIf="openGames | async as games">
   <div *ngIf="games.length">
     <h5>Open Games</h5>
 

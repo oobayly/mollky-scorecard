@@ -52,6 +52,15 @@ export interface PlayerRecord {
   scores: number[];
 }
 
+/** Represents a record of the number of wins a player has had. */
+export interface PlayerWins {
+  /** The player. */
+  player: Player;
+
+  /** The number of wins. */
+  wins: number;
+}
+
 /** Calculates the current score for the specified record in the game. */
 export function calculateScore(record: PlayerRecord, targetScore: number, resetScore: number): number {
   record.score = record.scores.reduce((total, value) => {

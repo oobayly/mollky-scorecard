@@ -1,7 +1,8 @@
-import { BehaviorSubject, Observable } from "rxjs";
-import { Game, Player } from "../model";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { Game, Player, PlayerWins } from "../model";
 
 import { Injectable } from "@angular/core";
+import { map } from "rxjs/operators";
 import { v4 as uuidv4 } from "uuid";
 
 @Injectable({
@@ -12,13 +13,17 @@ export class StorageService {
 
   private static readonly KEY_PLAYERS = "PLAYERS";
 
-  public readonly _games: BehaviorSubject<Game[]>;
+  private readonly _games: BehaviorSubject<Game[]>;
 
-  public readonly _players: BehaviorSubject<Player[]>;
+  private readonly _players: BehaviorSubject<Player[]>;
 
   public get games(): Observable<Game[]> {
     return this._games;
   }
+
+  public readonly leagueTable: Observable<PlayerWins[]>;
+
+  public readonly openGames: Observable<Game[]>;
 
   public get players(): Observable<Player[]> {
     return this._players;
@@ -27,6 +32,29 @@ export class StorageService {
   public constructor() {
     this._players = new BehaviorSubject<Player[]>(this.getStorageItem<Player[]>(StorageService.KEY_PLAYERS, []));
     this._games = new BehaviorSubject<Game[]>(this.getStorageItem<Game[]>(StorageService.KEY_GAMES, []));
+
+    // Open Games
+    this.openGames = this.games.pipe(
+      map((games) => {
+        return games.filter((x) => !x.winner);
+      })
+    );
+
+    // League table
+    this.leagueTable = combineLatest([this.games, this.players]).pipe(
+      map(([games, players]) => {
+        return players
+          .map((player) => {
+            const wins = games.filter((game) => game.winner?.id === player.id).length;
+
+            return {
+              player,
+              wins,
+            } as PlayerWins;
+          })
+          .sort((a, b) => b.wins - a.wins);
+      })
+    );
   }
 
   private getStorageItem<T>(key: string, emptyValue?: T): T | undefined {
