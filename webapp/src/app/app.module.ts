@@ -11,7 +11,9 @@ import {
 } from "angular-bootstrap-md";
 import { ModalsModule } from "./modals/modals.module";
 import { PlayersComponent } from "./pages/players/players.component";
+import { ServiceWorkerModule } from "@angular/service-worker";
 import { SharedModule } from "./shared/shared.module";
+import { environment } from "../environments/environment";
 import localeGB from "@angular/common/locales/en-GB"
 import { registerLocaleData } from "@angular/common";
 
@@ -33,6 +35,7 @@ registerLocaleData(localeGB);
     // 
     ModalsModule,
     SharedModule,
+    ServiceWorkerModule.register("ngsw-worker.js", { enabled: environment.production }),
   ],
   exports: [
     //
