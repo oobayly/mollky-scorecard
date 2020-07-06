@@ -1,6 +1,6 @@
+import { AfterViewInit, Component } from "@angular/core";
 import { BrowserQRCodeReader, Result } from "@zxing/library";
 
-import { Component } from "@angular/core";
 import { MDBModalRef } from "angular-bootstrap-md";
 import { ShareObject } from "../../core/model";
 
@@ -9,7 +9,7 @@ import { ShareObject } from "../../core/model";
   templateUrl: "./scan-modal.component.html",
   styleUrls: ["./scan-modal.component.scss"],
 })
-export class ScanModalComponent {
+export class ScanModalComponent implements AfterViewInit {
   public canScan = true;
 
   public error: string;
@@ -21,6 +21,16 @@ export class ScanModalComponent {
   public constructor(
     private modalRef: MDBModalRef
   ) {
+  }
+
+  public ngAfterViewInit(): void {
+    navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+      .then((_response) => {
+        // Camera is available.
+      })
+      .catch((_err) => {
+        this.canScan = false;
+      });
   }
 
   private async getImageUrl(file: File): Promise<string> {
