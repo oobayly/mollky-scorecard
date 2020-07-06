@@ -1,29 +1,48 @@
-import { first, mergeMap } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { first, map, mergeMap } from "rxjs/operators";
 
 import { AngularFireAuth } from "@angular/fire/auth";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { Injectable } from "@angular/core";
-import { of } from "rxjs";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
+  public get idTokenResult(): Observable<firebase.auth.IdTokenResult> {
+    return this.auth.idTokenResult;
+  }
+
+  public get user(): Observable<firebase.User> {
+    return this.auth.authState;
+  }
+
   public constructor(
-    private auth: AngularFireAuth
+    private auth: AngularFireAuth,
+    private firestore: AngularFirestore
   ) {
     this.auth.authState.pipe(
       first(),
       mergeMap((user) => {
         if (user) {
           return of(user);
-        }  else{
+        } else {
           return this.auth.signInAnonymously()
         }
+      }),
+      map((user) => {
+        if ("user" in user) {
+          user = user.user;
+        }
+
+        return user;
       })
-    ).subscribe((user: firebase.User | firebase.auth.UserCredential) => {
-      if ("user" in user) {
-        user = user.user;
-      }
+    ).subscribe(() => {
+      // 
     });
+  }
+
+  public getUser(): Promise<firebase.User> {
+    return this.auth.currentUser;
   }
 }

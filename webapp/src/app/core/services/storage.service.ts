@@ -1,37 +1,92 @@
-import { BehaviorSubject, Observable, combineLatest } from "rxjs";
-import { Game, Player, PlayerWins } from "../model";
+import * as firebase from "firebase/app";
 
+import { AngularFirestore, DocumentReference } from "@angular/fire/firestore";
+import { Game, Player, PlayerWins, User } from "../model";
+import { Observable, combineLatest, of } from "rxjs";
+import { first, map, mergeMap } from "rxjs/operators";
+
+import { AuthService } from "./auth.service";
 import { Injectable } from "@angular/core";
-import { map } from "rxjs/operators";
-import { v4 as uuidv4 } from "uuid";
+
+enum Collections {
+  Games = "games",
+  Players = "players",
+  Users = "users"
+}
 
 @Injectable({
   providedIn: "root",
 })
 export class StorageService {
-  private static readonly KEY_GAMES = "GAMES";
-
-  private static readonly KEY_PLAYERS = "PLAYERS";
-
-  private readonly _games: BehaviorSubject<Game[]>;
-
-  private readonly _players: BehaviorSubject<Player[]>;
-
-  public get games(): Observable<Game[]> {
-    return this._games;
-  }
+  public readonly games: Observable<Game[]>;
 
   public readonly leagueTable: Observable<PlayerWins[]>;
 
   public readonly openGames: Observable<Game[]>;
 
-  public get players(): Observable<Player[]> {
-    return this._players;
-  }
+  public readonly players: Observable<Player[]>;
 
-  public constructor() {
-    this._players = new BehaviorSubject<Player[]>(this.getStorageItem<Player[]>(StorageService.KEY_PLAYERS, []));
-    this._games = new BehaviorSubject<Game[]>(this.getStorageItem<Game[]>(StorageService.KEY_GAMES, []));
+  private readonly user: Observable<User>;
+
+  public constructor(
+    private auth: AuthService,
+    private firestore: AngularFirestore
+  ) {
+    // User observable
+    this.user = this.auth.user.pipe(
+      mergeMap((user) => {
+        return this.firestore.collection(Collections.Users).doc<User>(user.uid).snapshotChanges();
+      }),
+      map((doc) => {
+        if (doc.payload.exists) {
+          return doc.payload.data();
+        } else {
+          return {
+            gameIds: [],
+            playerIds: [],
+          }
+        }
+      })
+    );
+
+    this.games = this.user.pipe(
+      mergeMap((user) => {
+        if (!user.gameIds?.length) {
+          return of([]);
+        }
+
+        return this.firestore.collection<Game>(Collections.Games, (ref) => {
+          return ref.where("id", "in", user.gameIds);
+        }).snapshotChanges();
+      }),
+      map((docs) => {
+        return docs
+          .filter((x) => x.payload.doc.exists)
+          .map((x) => x.payload.doc.data());
+      }),
+      map((games) => {
+        games.forEach((x) => x.date = x.date.toDate());
+
+        return games;
+      })
+    );
+
+    this.players = this.user.pipe(
+      mergeMap((user) => {
+        if (!user.playerIds?.length) {
+          return of([]);
+        }
+
+        return this.firestore.collection<Player>(Collections.Players, (ref) => {
+          return ref.where("id", "in", user.playerIds);
+        }).snapshotChanges();
+      }),
+      map((docs) => {
+        return docs
+          .map((x) => x.payload.doc.data())
+          .sort((a, b) => a.name.localeCompare(b.name));
+      })
+    );
 
     // Open Games
     this.openGames = this.games.pipe(
@@ -57,107 +112,156 @@ export class StorageService {
     );
   }
 
-  private getStorageItem<T>(key: string, emptyValue?: T): T | undefined {
-    const json = localStorage.getItem(`StorageService-${key}`);
+  public async createGame(game: Game): Promise<void> {
+    const isNewGame = !game.id;
 
-    if (!json) {
-      return emptyValue;
+    if (isNewGame) {
+      this.validateGame(game);
     }
 
-    return JSON.parse(json) as T;
+    await this.firestore.firestore.runTransaction(async (transaction) => {
+      const [user, userRef] = await this.getUser(transaction);
+
+      if (isNewGame) {
+        const gameRef = this.firestore.firestore.collection(Collections.Games).doc(); // https://github.com/angular/angularfire/issues/1974
+
+        game.id = gameRef.id;
+
+        transaction.set(gameRef, game);
+      }
+
+      user.gameIds.push(game.id);
+
+      transaction.set(userRef, user);
+    });
   }
 
-  public removeGame(id: string): void {
-    const list = this._games.getValue();
-    const index = list.findIndex((x) => x.id === id);
+  public async createPlayer(player: Player): Promise<void> {
+    const isNewPlayer = !player.id;
 
-    if (index !== -1) {
-      list.splice(index, 1);
+    if (isNewPlayer) {
+      this.validatePlayer(player);
     }
 
-    this.setStorageItem(StorageService.KEY_GAMES, list);
-    this._games.next(list);
+    await this.firestore.firestore.runTransaction(async (transaction) => {
+      const [user, userRef] = await this.getUser(transaction);
+
+      if (isNewPlayer) {
+        const playerRef = this.firestore.firestore.collection(Collections.Players).doc(); // https://github.com/angular/angularfire/issues/1974
+
+        player.id = playerRef.id;
+
+        transaction.set(playerRef, player);
+      }
+
+      user.playerIds.push(player.id);
+
+      transaction.set(userRef, user);
+    });
   }
 
-  public removePlayer(id: string): void {
-    const list = this._players.getValue();
-    const index = list.findIndex((x) => x.id === id);
+  private async getUser(transaction: firebase.firestore.Transaction): Promise<[User, DocumentReference]> {
+    const { uid } = await this.auth.getUser();
+    const userRef = this.firestore.collection(Collections.Users).doc(uid).ref;
+    const userDoc = await transaction.get(userRef);
+    let user: User;
 
-    if (index !== -1) {
-      list.splice(index, 1);
+    if (userDoc?.exists) {
+      user = userDoc.data() as User;
+    } else {
+      user = {
+        gameIds: [],
+        playerIds: [],
+      };
     }
 
-    this.setStorageItem(StorageService.KEY_PLAYERS, list);
-    this._players.next(list);
+    return [user, userRef];
   }
 
-  private saveGame(game: Game): Game[] {
-    const list = this._games.getValue();
-    const index = list.findIndex((x) => x.id === game.id);
+  public async  removeGame(id: string): Promise<void> {
+    const { uid } = await this.auth.getUser();
+    const user = await this.user.pipe(first()).toPromise();
+    const usersRef = this.firestore.firestore.collection(Collections.Users);
+    const index = user.gameIds.indexOf(id);
 
     if (index === -1) {
-      list.push(game);
-    } else {
-      list[index] = game;
+      return;
     }
 
-    this.setStorageItem(StorageService.KEY_GAMES, list);
-    this._games.next(list);
+    user.gameIds.splice(index, 1);
 
-    return list;
+    const usedBy = await usersRef.where("gameIds", "array-contains", id).get();
+
+    const batch = this.firestore.firestore.batch();
+
+    batch.update(usersRef.doc(uid), user);
+
+    if (usedBy.docs.length < 2) {
+      batch.delete(this.firestore.firestore.collection(Collections.Games).doc(id));
+    }
+
+    await batch.commit();
   }
 
-  private savePlayer(player: Player): Player[] {
-    const list = this._players.getValue();
-    const index = list.findIndex((x) => x.id === player.id);
+  public async removePlayer(id: string): Promise<void> {
+    const { uid } = await this.auth.getUser();
+    const user = await this.user.pipe(first()).toPromise();
+    const usersRef = this.firestore.firestore.collection(Collections.Users);
+    const index = user.playerIds.indexOf(id);
 
     if (index === -1) {
-      list.push(player);
-    } else {
-      list[index] = player;
+      return;
     }
 
-    list.sort((a, b) => a.name.localeCompare(b.name));
+    user.playerIds.splice(index, 1);
 
-    this.setStorageItem(StorageService.KEY_PLAYERS, list);
-    this._players.next(list);
+    const usedBy = await usersRef.where("playerIds", "array-contains", id).get();
 
-    return list;
+    const batch = this.firestore.firestore.batch();
+
+    batch.update(usersRef.doc(uid), user);
+
+    if (usedBy.docs.length < 2) {
+      batch.delete(this.firestore.firestore.collection(Collections.Players).doc(id));
+    }
+
+    await batch.commit();
   }
 
-  private setStorageItem<T>(key: string, value: T | undefined): void {
-    let json: string | null;
+  public async updateGame(game: Game): Promise<void> {
+    this.validateGame(game);
 
-    if (value == undefined) {
-      json = null;
-    } else {
-      json = JSON.stringify(value);
+    const ref = this.firestore.collection(Collections.Games).doc(game.id);
+
+    if (game.winner) {
+      const playerRef = this.firestore.firestore.collection(Collections.Players).doc(game.winner.id);
+      const increment = firebase.firestore.FieldValue.increment(1);
+
+      await playerRef.update({ wins: increment });
     }
 
-    localStorage.setItem(`StorageService-${key}`, json);
+    await ref.update(game);
   }
 
-  public updateGame(game: Game): void {
-    if (!game.id) {
-      game.id = uuidv4();
-    }
+  public async updatePlayer(player: Player): Promise<void> {
+    this.validatePlayer(player);
 
+    const ref = this.firestore.collection(Collections.Players).doc(player.id);
+
+    await ref.update(player);
+  }
+
+  private validateGame(game: Game): void {
     if (game.players.length < 2) {
       throw new TypeError("At least two players are required.");
     }
-
-    this.saveGame(game);
   }
 
-  public updatePlayer(player: Player): void {
-    if (!player.id) {
-      player.id = uuidv4();
-    }
+  private validatePlayer(player: Player): void {
+    player.name = (player.name || "").trim();
 
     if (!player.name) {
       throw new TypeError("The player's name is required.");
     }
-
-    this.savePlayer(player);
   }
 }

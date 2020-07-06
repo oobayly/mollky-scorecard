@@ -33,6 +33,7 @@ export class EditPlayerComponent implements AfterViewInit {
       "id": [null],
       "maxMisses": [3, [Validators.required, Validators.min(1), Validators.max(99)]],
       "name": ["", [Validators.required]],
+      "wins": 0,
     });
   }
 
@@ -46,14 +47,18 @@ export class EditPlayerComponent implements AfterViewInit {
     this.modalRef.hide();
   }
 
-  public onSaveClick(_e: Event): void {
+  public async onSaveClick(_e: Event): Promise<void> {
     if (!this.playerForm.valid) {
       return;
     }
 
     const player = Object.assign({}, this.playerForm.value);
 
-    this.storage.updatePlayer(player);
+    if (this.isEditing) {
+      await this.storage.updatePlayer(player);
+    } else {
+      await this.storage.createPlayer(player);
+    }
 
     this.hide();
   }

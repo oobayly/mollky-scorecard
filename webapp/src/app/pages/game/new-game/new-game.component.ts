@@ -5,7 +5,6 @@ import { PlayersListComponent } from "../../../shared/players-list/players-list.
 import { Router } from "@angular/router";
 import { StorageService } from "../../../core/services/storage.service";
 import { Subscription } from "rxjs";
-import { v4 as uuidv4 } from "uuid";
 
 @Component({
   selector: "app-new-game",
@@ -32,7 +31,7 @@ export class NewGameComponent implements AfterViewInit, OnDestroy {
   ) {
     this.game = {
       currentPlayer: 0,
-      id: uuidv4(),
+      id: null,
       date: new Date(),
       players: [],
       resetScore: 25,
@@ -73,7 +72,7 @@ export class NewGameComponent implements AfterViewInit, OnDestroy {
       players[j] = temp;
     }
 
-    this.storage.updateGame(this.game);
+    this.storage.createGame(this.game);
 
     this.router.navigateByUrl(`/game/${this.game.id}`);
   }

@@ -5,11 +5,11 @@
   </mdb-breadcrumb-item>
   <mdb-breadcrumb-item class="active">
     <mdb-icon fas icon="dice-d20" class="mr-1"></mdb-icon>
-    Started on {{game.date | date: "short"}}
+    Started on {{game?.date | date: "short"}}
   </mdb-breadcrumb-item>
 </mdb-breadcrumb>
 
-<div class="container">
+<div class="container" *ngIf="game">
 
   <h4>
     Target: {{game.targetScore}}

@@ -35,6 +35,9 @@ export interface Player {
 
   /** The name of the player. */
   name: string;
+
+  /** The number of wins that the player has had. */
+  wins: number;
 }
 
 /** Represents a record of scores */
@@ -59,6 +62,14 @@ export interface PlayerWins {
 
   /** The number of wins. */
   wins: number;
+}
+
+export interface User {
+  /** The list of game IDs. */
+  gameIds: string[];
+
+  /** The list of player IDs. */
+  playerIds: string[];
 }
 
 /** Calculates the current score for the specified record in the game. */
