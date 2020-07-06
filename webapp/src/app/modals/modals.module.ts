@@ -6,10 +6,11 @@ import { EditPlayerComponent } from "./edit-player/edit-player.component";
 import { EditScoreComponent } from "./edit-score/edit-score.component";
 import { NgModule } from "@angular/core";
 import { QrcodeModalComponent } from "./qrcode-modal/qrcode-modal.component";
+import { ScanModalComponent } from "./scan-modal/scan-modal.component";
 import { SharedModule } from "../shared/shared.module";
 
 @NgModule({
-  declarations: [ConfirmDeleteComponent, EditPlayerComponent, EditScoreComponent, QrcodeModalComponent],
+  declarations: [ConfirmDeleteComponent, EditPlayerComponent, EditScoreComponent, QrcodeModalComponent, ScanModalComponent],
   imports: [
     CommonModule,
     FormsModule,

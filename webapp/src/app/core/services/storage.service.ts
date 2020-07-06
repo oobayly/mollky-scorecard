@@ -178,6 +178,12 @@ export class StorageService {
     return [user, userRef];
   }
 
+  public async importPlayer(id: string): Promise<void> {
+    await this.createPlayer({
+      id,
+    } as Player)
+  }
+
   public async  removeGame(id: string): Promise<void> {
     const { uid } = await this.auth.getUser();
     const user = await this.user.pipe(first()).toPromise();

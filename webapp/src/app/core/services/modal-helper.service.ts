@@ -6,6 +6,7 @@ import { EditScoreComponent } from "../../modals/edit-score/edit-score.component
 import { Injectable } from "@angular/core";
 import { MDBModalService } from "angular-bootstrap-md";
 import { QrcodeModalComponent } from "../../modals/qrcode-modal/qrcode-modal.component";
+import { ScanModalComponent } from "../../modals/scan-modal/scan-modal.component";
 
 @Injectable({
   providedIn: "root",
@@ -22,7 +23,7 @@ export class ModalHelperService {
     });
 
     const component = ref.content as EditPlayerComponent;
-   
+
     if (player) {
       component.setPlayer(player);
     }
@@ -44,7 +45,7 @@ export class ModalHelperService {
     const component = ref.content as EditScoreComponent;
 
     component.setPlayerRecord(gameId, record);
- 
+
     return new Promise<void>((resolve) => {
       const sub = this.modal.closed.subscribe(() => {
         sub.unsubscribe();
@@ -72,7 +73,7 @@ export class ModalHelperService {
     });
   }
 
-  public async showQrCode(title : string, data: string | ShareObject) : Promise<void> {
+  public async showQrCode(title: string, data: string | ShareObject): Promise<void> {
     const ref = this.modal.show(QrcodeModalComponent, {
       "class": "modal-dialog-centered",
     });
@@ -81,7 +82,7 @@ export class ModalHelperService {
 
     component.data = (typeof data === "string") ? data : JSON.stringify(data);
     component.title = title;
- 
+
     return new Promise<void>((resolve) => {
       const sub = this.modal.closed.subscribe(() => {
         sub.unsubscribe();
@@ -89,5 +90,23 @@ export class ModalHelperService {
         resolve();
       })
     });
- }
+  }
+
+  public async showScanner(title: string): Promise<ShareObject> {
+    const ref = this.modal.show(ScanModalComponent, {
+      "class": "modal-dialog-centered",
+    });
+
+    const component = ref.content as ScanModalComponent;
+
+    component.title = title;
+
+    return new Promise<ShareObject>((resolve) => {
+      const sub = this.modal.closed.subscribe(() => {
+        sub.unsubscribe();
+
+        resolve(component.response);
+      })
+    });
+  }
 }

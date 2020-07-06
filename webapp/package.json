@@ -28,6 +28,8 @@
     "@fortawesome/fontawesome-free": "^5.13.1",
     "@types/chart.js": "^2.9.22",
     "@types/uuid": "^8.0.0",
+    "@zxing/library": "^0.17.0",
+    "@zxing/ngx-scanner": "^3.0.0",
     "angular-bootstrap-md": "^9.3.1",
     "angularx-qrcode": "^2.3.4",
     "animate.css": "^4.1.0",
