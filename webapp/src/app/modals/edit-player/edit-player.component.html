@@ -21,11 +21,11 @@
       <label class="">Player Name:</label>
     </div>
 
-    <!-- Avatar -->
+    <!-- Misses -->
     <div class="md-form">
-      <input mdbInput type="number" class="form-control" min="0" max="10" placeholder="The maximum allowed misses."
+      <input mdbInput type="number" class="form-control" min="0" max="10" placeholder="The number of misses to eliminate the player."
         formControlName="maxMisses" [ngClass]="{'invalid': !playerForm.controls.maxMisses.valid}">
-      <label class="">Allowed Misses:</label>
+      <label class="">Misses in row:</label>
     </div>
 
   </form>
