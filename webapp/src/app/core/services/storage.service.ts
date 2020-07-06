@@ -128,11 +128,22 @@ export class StorageService {
         game.id = gameRef.id;
 
         transaction.set(gameRef, game);
+      } else {
+        // In case an invalid ID has been provided.
+        const existing = await this.firestore.firestore.collection(Collections.Games).doc(game.id).get();
+
+        if (!existing.exists) {
+          console.log(`No game could be found with id = ${game.id}`);
+
+          return;
+        }
       }
 
-      user.gameIds.push(game.id);
+      if (!user.gameIds.includes(game.id)) {
+        user.gameIds.push(game.id);
 
-      transaction.set(userRef, user);
+        transaction.set(userRef, user);
+      }
     });
   }
 
@@ -152,11 +163,21 @@ export class StorageService {
         player.id = playerRef.id;
 
         transaction.set(playerRef, player);
+      } else {
+        // In case an invalid ID has been provided.
+        const existing = await this.firestore.firestore.collection(Collections.Players).doc(player.id).get();
+
+        if (!existing.exists) {
+          console.log(`No player could be found with id = ${player.id}`);
+          return;
+        }
       }
 
-      user.playerIds.push(player.id);
+      if (!user.playerIds.includes(player.id)) {
+        user.playerIds.push(player.id);
 
-      transaction.set(userRef, user);
+        transaction.set(userRef, user);
+      }
     });
   }
 
