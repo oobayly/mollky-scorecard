@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "mollky-bayly-eu": {
+      "hosting": {
+        "webapp": [
+          "mollky-bayly-eu"
+        ]
+      }
+    }
+  }
+}

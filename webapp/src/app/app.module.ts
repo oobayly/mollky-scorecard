@@ -1,5 +1,6 @@
 import { LOCALE_ID, NgModule } from "@angular/core";
 
+import { AngularFireModule } from "@angular/fire";
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -30,6 +31,8 @@ registerLocaleData(localeGB);
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
+    // Firebase
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     // MDB
     MDBBootstrapModule.forRoot(),
     // 
