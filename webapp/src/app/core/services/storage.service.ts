@@ -1,8 +1,8 @@
 import * as firebase from "firebase/app";
 
 import { AngularFirestore, DocumentReference } from "@angular/fire/firestore";
-import { Game, Player, PlayerWins, User } from "../model";
-import { Observable, combineLatest, of } from "rxjs";
+import { Game, Player, User } from "../model";
+import { Observable, of } from "rxjs";
 import { first, map, mergeMap } from "rxjs/operators";
 
 import { AuthService } from "./auth.service";
@@ -19,8 +19,6 @@ enum Collections {
 })
 export class StorageService {
   public readonly games: Observable<Game[]>;
-
-  public readonly leagueTable: Observable<PlayerWins[]>;
 
   public readonly openGames: Observable<Game[]>;
 
@@ -92,22 +90,6 @@ export class StorageService {
     this.openGames = this.games.pipe(
       map((games) => {
         return games.filter((x) => !x.winner);
-      })
-    );
-
-    // League table
-    this.leagueTable = combineLatest([this.games, this.players]).pipe(
-      map(([games, players]) => {
-        return players
-          .map((player) => {
-            const wins = games.filter((game) => game.winner?.id === player.id).length;
-
-            return {
-              player,
-              wins,
-            } as PlayerWins;
-          })
-          .sort((a, b) => b.wins - a.wins);
       })
     );
   }

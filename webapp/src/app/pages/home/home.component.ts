@@ -1,9 +1,10 @@
-import { Game, PlayerWins } from "../../core/model";
+import { Game, Player } from "../../core/model";
 
 import { Component } from "@angular/core";
 import { ModalHelperService } from "../../core/services/modal-helper.service";
 import { Observable } from "rxjs";
 import { StorageService } from "../../core/services/storage.service";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-home",
@@ -11,9 +12,7 @@ import { StorageService } from "../../core/services/storage.service";
   styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent {
-  public get leagueTable(): Observable<PlayerWins[]> {
-    return this.storage.leagueTable;
-  }
+  public readonly leagueTable: Observable<Player[]>;
 
   public get openGames(): Observable<Game[]> {
     return this.storage.openGames;
@@ -23,6 +22,12 @@ export class HomeComponent {
     private modalHelper: ModalHelperService,
     private storage: StorageService
   ) {
+    this.leagueTable = this.storage.players.pipe(
+      map((players) => {
+        return players
+          .sort((a, b) => b.wins - a.wins);
+      })
+    );
   }
 
   public async onAddPlayerClick(): Promise<void> {

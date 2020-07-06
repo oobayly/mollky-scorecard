@@ -55,15 +55,6 @@ export interface PlayerRecord {
   scores: number[];
 }
 
-/** Represents a record of the number of wins a player has had. */
-export interface PlayerWins {
-  /** The player. */
-  player: Player;
-
-  /** The number of wins. */
-  wins: number;
-}
-
 /** Represents an object for sharing data. */
 export interface ShareObject {
   /** The ID of the object being shared. */
