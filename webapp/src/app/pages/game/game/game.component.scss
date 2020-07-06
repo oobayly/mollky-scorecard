@@ -7,4 +7,13 @@
   .list-group-item .player-score {
     min-width: 3em;
   }
+
+  .pin-btn {
+    color: white;
+    background-color: #795548 !important;
+  }
+
+  .pin-btn.active {
+    background-color: #388e3c !important;
+  }
 }

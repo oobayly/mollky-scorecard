@@ -40,10 +40,14 @@
     </li>
   </ul>
 
+  <div class="mt-3 px-2">
+    <h5>Score needed to win: {{scoreToWin}}</h5>
+  </div>
+
   <!-- Pins -->
   <div class="mt-3 font-weight-bold">
     <div class="row justify-content-center" *ngFor="let row of PIN_ORDER">
-      <label mdbBtn color="brown" class="px-4" mdbCheckbox mdbWavesEffect *ngFor="let pin of row"
+      <label mdbBtn class="pin-btn px-4" mdbCheckbox mdbWavesEffect *ngFor="let pin of row"
         [(ngModel)]="checkedPins[pin]">
         {{pin}}
       </label>

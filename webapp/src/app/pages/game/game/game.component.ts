@@ -29,7 +29,15 @@ export class GameComponent {
 
   public readonly checkedPins: { [key: string]: boolean } = {};
 
+  public get currentPlayer(): PlayerRecord {
+    return this.game.players[this.game.currentPlayer];
+  }
+
   public game: Game;
+
+  public get scoreToWin(): number {
+    return this.game.targetScore - (this.currentPlayer?.score || 0);
+  }
 
   public constructor(
     private modalHelper: ModalHelperService,
