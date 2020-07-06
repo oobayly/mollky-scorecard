@@ -19,6 +19,10 @@
         (click)="onPlayerDeleteClick($event, item)">
         <mdb-icon class="" fas icon="user-times"></mdb-icon>
       </button>
+      <button type="button" class="p-1 ml-0" mdbBtn color="dark" outline="true" mdbWavesEffect
+        (click)="onPlayerShare($event, item)">
+        <mdb-icon class="" fas icon="share-alt"></mdb-icon>
+      </button>
     </div>
 
     <div class="custom-control custom-switch ml-4" *ngIf="canSelect" (click)="$event.stopPropagation()">

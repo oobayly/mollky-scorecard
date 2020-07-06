@@ -4,6 +4,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { NgModule } from "@angular/core";
 import { PlayersListComponent } from "./players-list/players-list.component";
+import {QRCodeModule} from "angularx-qrcode";
 
 @NgModule({
   declarations: [PlayersListComponent],
@@ -16,6 +17,8 @@ import { PlayersListComponent } from "./players-list/players-list.component";
     ButtonsModule,
     IconsModule,
     InputsModule,
+    // Other
+    QRCodeModule,
   ],
   exports: [
     FormsModule,
@@ -27,6 +30,8 @@ import { PlayersListComponent } from "./players-list/players-list.component";
     InputsModule,
     // Components
     PlayersListComponent,
+    // Other
+    QRCodeModule,
   ],
 })
 export class SharedModule { }

@@ -5,10 +5,11 @@ import { ConfirmDeleteComponent } from "./confirm-delete/confirm-delete.componen
 import { EditPlayerComponent } from "./edit-player/edit-player.component";
 import { EditScoreComponent } from "./edit-score/edit-score.component";
 import { NgModule } from "@angular/core";
+import { QrcodeModalComponent } from "./qrcode-modal/qrcode-modal.component";
 import { SharedModule } from "../shared/shared.module";
 
 @NgModule({
-  declarations: [ConfirmDeleteComponent, EditPlayerComponent, EditScoreComponent],
+  declarations: [ConfirmDeleteComponent, EditPlayerComponent, EditScoreComponent, QrcodeModalComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -21,6 +22,7 @@ import { SharedModule } from "../shared/shared.module";
     ConfirmDeleteComponent,
     EditPlayerComponent,
     EditScoreComponent,
+    QrcodeModalComponent,
   ],
 })
 export class ModalsModule { }

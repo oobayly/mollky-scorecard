@@ -13,7 +13,7 @@ import { map } from "rxjs/operators";
 
 export interface PlayerCheckEvent {
   checked: boolean;
- 
+
   player: Player;
 }
 
@@ -88,7 +88,7 @@ export class PlayersListComponent {
 
   public async onPlayerDeleteClick(e: Event, item: Player): Promise<void> {
     const response = await this.modalHelper.showDelete(`Are you sure you want to delete ${item.name}?`)
-    
+
     if (response) {
       this.storage.removePlayer(item.id);
     }
@@ -98,6 +98,15 @@ export class PlayersListComponent {
 
   public async onPlayerEditClick(e: Event, item: Player): Promise<void> {
     await this.modalHelper.showEditPlayer(item);
+
+    e.stopPropagation();
+  }
+
+  public async  onPlayerShare(e: Event, item: Player): Promise<void> {
+    this.modalHelper.showQrCode(`Share ${item.name}`, {
+      id: item.id,
+      type: "player",
+    });
 
     e.stopPropagation();
   }

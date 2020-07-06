@@ -1,10 +1,11 @@
-import { Player, PlayerRecord } from "../model";
+import { Player, PlayerRecord, ShareObject } from "../model";
 
 import { ConfirmDeleteComponent } from "../../modals/confirm-delete/confirm-delete.component";
 import { EditPlayerComponent } from "../../modals/edit-player/edit-player.component";
 import { EditScoreComponent } from "../../modals/edit-score/edit-score.component";
 import { Injectable } from "@angular/core";
 import { MDBModalService } from "angular-bootstrap-md";
+import { QrcodeModalComponent } from "../../modals/qrcode-modal/qrcode-modal.component";
 
 @Injectable({
   providedIn: "root",
@@ -70,4 +71,23 @@ export class ModalHelperService {
       })
     });
   }
+
+  public async showQrCode(title : string, data: string | ShareObject) : Promise<void> {
+    const ref = this.modal.show(QrcodeModalComponent, {
+      "class": "modal-dialog-centered",
+    });
+
+    const component = ref.content as QrcodeModalComponent;
+
+    component.data = (typeof data === "string") ? data : JSON.stringify(data);
+    component.title = title;
+ 
+    return new Promise<void>((resolve) => {
+      const sub = this.modal.closed.subscribe(() => {
+        sub.unsubscribe();
+
+        resolve();
+      })
+    });
+ }
 }

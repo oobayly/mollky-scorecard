@@ -64,6 +64,15 @@ export interface PlayerWins {
   wins: number;
 }
 
+/** Represents an object for sharing data. */
+export interface ShareObject {
+  /** The ID of the object being shared. */
+  id: string;
+
+  /** The type of object being shared. */
+  type: "game" | "player";
+}
+
 export interface User {
   /** The list of game IDs. */
   gameIds: string[];
