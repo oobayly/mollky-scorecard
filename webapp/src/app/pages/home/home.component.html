@@ -19,7 +19,7 @@
 </div>
 
 <!-- League table -->
-<div class="container mt-4" *ngIf="leagueTable | async as table">
+<div class="container mt-4" *ngIf="leagueTable | async as table; else loading">
   <div *ngIf="table.length">
     <h5>League Table</h5>
 
@@ -68,3 +68,7 @@
     </ul>
   </div>
 </div>
+
+<ng-template #loading>
+  <app-loader></app-loader>
+</ng-template>

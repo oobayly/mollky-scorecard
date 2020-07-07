@@ -1,5 +1,5 @@
-<ul class="list-group">
-  <li class="list-group-item d-flex align-items-center" *ngFor="let item of players | async; let i = index"
+<ul class="list-group" *ngIf="players | async as items; else loading">
+  <li class="list-group-item d-flex align-items-center" *ngFor="let item of items; let i = index"
     (click)="onPlayerClick($event, item)">
 
     <div class="mr-auto">
@@ -33,3 +33,7 @@
 
   </li>
 </ul>
+
+<ng-template #loading>
+  <app-loader></app-loader>
+</ng-template>
