@@ -60,7 +60,7 @@ export class NewGameComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.push(checkedSub);
   }
 
-  public onCreateClick(_e: Event): void {
+  public async onCreateClick(_e: Event): Promise<void> {
     const { players } = this.game;
 
     // Randomise the players list
@@ -72,7 +72,7 @@ export class NewGameComponent implements AfterViewInit, OnDestroy {
       players[j] = temp;
     }
 
-    this.storage.createGame(this.game);
+    await this.storage.createGame(this.game);
 
     this.router.navigateByUrl(`/game/${this.game.id}`);
   }
