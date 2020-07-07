@@ -1,9 +1,10 @@
 import { ActivatedRoute, Router } from "@angular/router";
+import { AfterViewInit, Component, OnDestroy } from "@angular/core";
 import { Game, PlayerRecord, calculateScore } from "../../../core/model";
 
-import { Component } from "@angular/core";
 import { ModalHelperService } from "../../../core/services/modal-helper.service";
 import { StorageService } from "../../../core/services/storage.service";
+import { WakeLockService } from "../../../core/services/wake-lock.service";
 import { first } from "rxjs/operators";
 
 @Component({
@@ -11,7 +12,7 @@ import { first } from "rxjs/operators";
   templateUrl: "./game.component.html",
   styleUrls: ["./game.component.scss"],
 })
-export class GameComponent {
+export class GameComponent implements AfterViewInit, OnDestroy {
   public readonly PIN_ORDER = [
     [7, 9, 8],
     [5, 11, 12, 6],
@@ -20,7 +21,7 @@ export class GameComponent {
   ];
 
   public get canPlay(): boolean {
-    const player = this.game.players[this.game.currentPlayer];
+    const player = this.currentPlayer;
 
     return (player.score !== this.game.targetScore) // Hasn't met target
       && (player.player.id !== this.game.winner?.id) // Isn't the winner
@@ -43,7 +44,8 @@ export class GameComponent {
     private modalHelper: ModalHelperService,
     private route: ActivatedRoute,
     router: Router,
-    private storage: StorageService
+    private storage: StorageService,
+    public wakeLock: WakeLockService,
   ) {
     const gameId = this.route.snapshot.params["id"];
 
@@ -56,6 +58,28 @@ export class GameComponent {
         router.navigateByUrl("/");
       }
     });
+  }
+
+  public ngAfterViewInit(): void {
+    // Request a wake lock
+    if (this.wakeLock.isSupported) {
+      this.wakeLock.requestLock("screen")
+        .then((_resp) => {
+          //
+        }).catch((_e) => {
+          //
+        });
+    }
+  }
+
+  public ngOnDestroy(): void {
+    // Release the wake lock
+    if (this.wakeLock.isLocked) {
+      this.wakeLock.releaseLock()
+        .then(() => {
+          //
+        });
+    }
   }
 
   private clearPins(): void {
