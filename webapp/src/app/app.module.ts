@@ -2,15 +2,16 @@ import { registerLocaleData } from "@angular/common";
 import localeGB from "@angular/common/locales/en-GB"
 import { LOCALE_ID, NgModule } from "@angular/core";
 import { AngularFireModule } from "@angular/fire";
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from "@angular/fire/auth";
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from "@angular/fire/firestore";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {
   MDBBootstrapModule,
 } from "angular-bootstrap-md";
 import { ServiceWorkerModule } from "@angular/service-worker";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/auth";
 
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
@@ -21,6 +22,13 @@ import { SharedModule } from "./shared/shared.module";
 import { environment } from "../environments/environment";
 
 registerLocaleData(localeGB);
+
+// See https://stackoverflow.com/a/65514850/422689
+const fbApp = firebase.initializeApp(environment.firebaseConfig, "fbApp");
+if (!environment.production) {
+  fbApp.auth().useEmulator("http://localhost:9099");
+  fbApp.firestore().useEmulator("localhost", 8080);
+}
 
 @NgModule({
   declarations: [
@@ -34,7 +42,7 @@ registerLocaleData(localeGB);
     BrowserAnimationsModule,
     FormsModule,
     // Firebase
-    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireModule.initializeApp(environment.firebaseConfig, fbApp.name),
     // MDB
     MDBBootstrapModule.forRoot(),
     // 
@@ -49,8 +57,6 @@ registerLocaleData(localeGB);
   ],
   providers: [
     { provide: LOCALE_ID, useValue: navigator.language },
-    { provide: USE_AUTH_EMULATOR, useValue: environment.production ? undefined : ["localhost", 9099] },
-    { provide: USE_FIRESTORE_EMULATOR, useValue: environment.production ? undefined : ["localhost", 8080] },
   ],
   bootstrap: [AppComponent],
 })

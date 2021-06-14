@@ -1,11 +1,11 @@
-import { ActivatedRoute, Router } from "@angular/router";
 import { AfterViewInit, Component, OnDestroy } from "@angular/core";
-import { Game, PlayerRecord, calculateScore } from "../../../core/model";
+import { ActivatedRoute, Router } from "@angular/router";
+import { first } from "rxjs/operators";
 
+import { Game, PlayerRecord, calculateScore } from "../../../core/model";
 import { ModalHelperService } from "../../../core/services/modal-helper.service";
 import { StorageService } from "../../../core/services/storage.service";
 import { WakeLockService } from "../../../core/services/wake-lock.service";
-import { first } from "rxjs/operators";
 
 @Component({
   selector: "app-game",
@@ -24,8 +24,8 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     const player = this.currentPlayer;
 
     return (player.score !== this.game.targetScore) // Hasn't met target
-      && (player.player.id !== this.game.winner?.id) // Isn't the winner
-      && (player.misses < player.player.maxMisses); // Hasn't exceeded misses
+      && (player.id !== this.game.winner) // Isn't the winner
+      && (player.misses < player.maxMisses); // Hasn't exceeded misses
   }
 
   public readonly checkedPins: { [key: string]: boolean } = {};
@@ -49,14 +49,16 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   ) {
     const gameId = this.route.snapshot.params["id"];
 
-    this.storage.games.pipe(
+    this.storage.getGame(gameId).pipe(
       first()
-    ).subscribe((games) => {
-      this.game = games.find((x) => x.id === gameId);
-
-      if (!this.game) {
+    ).subscribe((game) => {
+      if (!game) {
         router.navigateByUrl("/");
+
+        return;
       }
+
+      this.game = game;
     });
   }
 
@@ -102,14 +104,14 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   private nextPlayer() {
     const { targetScore } = this.game;
     const remaining = this.game.players.filter((x) => {
-      return (x.score !== targetScore) && (x.player.maxMisses > x.misses);
+      return (x.score !== targetScore) && (x.maxMisses > x.misses);
     });
 
     // The one remaining player is the default winner
     if ((remaining.length === 1) && !this.game.winner) {
-      this.game.winner = remaining[0].player;
+      this.game.winner = remaining[0].id;
 
-      this.game.currentPlayer = this.game.players.findIndex((x) => x.player.id === this.game.winner.id);
+      this.game.currentPlayer = this.game.players.findIndex((x) => x.id === this.game.winner);
 
       return;
     }
@@ -122,7 +124,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
         this.game.currentPlayer = (this.game.currentPlayer + 1) % this.game.players.length;
 
         player = this.game.players[this.game.currentPlayer];
-      } while (player.score === targetScore || player.misses >= player.player.maxMisses);
+      } while (player.score === targetScore || player.misses >= player.maxMisses);
     }
   }
 
@@ -144,7 +146,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     this.clearPins();
 
     if ((record.score === this.game.targetScore) && !this.game.winner) {
-      this.game.winner = record.player;
+      this.game.winner = record.id;
     }
 
     this.nextPlayer();

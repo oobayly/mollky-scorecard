@@ -5,7 +5,7 @@
   </mdb-breadcrumb-item>
   <mdb-breadcrumb-item class="active" *ngIf="game">
     <mdb-icon fas icon="dice-d20" class="mr-1"></mdb-icon>
-    Started on {{game.date | date: "short"}}
+    Started on {{game.date.toDate() | date: "short"}}
   </mdb-breadcrumb-item>
 </mdb-breadcrumb>
 
@@ -21,7 +21,7 @@
 
       <div class="d-flex align-items-center">
         <!-- Name -->
-        <h5 class="mb-0">{{player.player.name}}</h5>
+        <h5 class="mb-0">{{player.name}}</h5>
 
         <!-- Misses -->
         <span class="flex-grow-1 text-right">
@@ -31,10 +31,10 @@
 
         <!-- Score -->
         <h5 class="text-center player-score mb-0">
-          <mdb-badge pill="true" primary="true" *ngIf="player.player.id !== game.winner?.id">
+          <mdb-badge pill="true" primary="true" *ngIf="player.id !== game.winner">
             {{player.score}}
           </mdb-badge>
-          <mdb-icon fas icon="trophy" class="amber-text" *ngIf="player.player.id === game.winner?.id"></mdb-icon>
+          <mdb-icon fas icon="trophy" class="amber-text" *ngIf="player.id === game.winner"></mdb-icon>
         </h5>
       </div>
     </li>

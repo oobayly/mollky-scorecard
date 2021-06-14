@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ViewChild } from "@angular/core";
-
-import { ModalHelperService } from "src/app/core/services/modal-helper.service";
 import { Observable } from "rxjs";
+
+import { StorageService } from "../../core/services/storage.service";
+import { ModalHelperService } from "src/app/core/services/modal-helper.service";
 import { Player } from "src/app/core/model";
 import { PlayersListComponent } from "src/app/shared/players-list/players-list.component";
-import { StorageService } from "../../core/services/storage.service";
 
 @Component({
   selector: "app-players",
@@ -15,7 +15,7 @@ export class PlayersComponent implements AfterViewInit {
   @ViewChild("playerList")
   public playerList: PlayersListComponent;
 
-  public checkedPlayers: Observable<Player[]>;
+  public checkedPlayers$: Observable<Player[]>;
 
   public constructor(
     private modal: ModalHelperService,
@@ -25,7 +25,7 @@ export class PlayersComponent implements AfterViewInit {
 
   public ngAfterViewInit(): void {
     setTimeout(() => {
-      this.checkedPlayers = this.playerList.checkedPlayers;
+      this.checkedPlayers$ = this.playerList.checkedPlayers$;
     });
   }
 

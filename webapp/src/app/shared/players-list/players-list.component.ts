@@ -1,15 +1,15 @@
-import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import {
   Component,
   EventEmitter,
   Input,
   Output,
 } from "@angular/core";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { map } from "rxjs/operators";
 
 import { ModalHelperService } from "../../core/services/modal-helper.service";
 import { Player } from "../../core/model";
 import { StorageService } from "../../core/services/storage.service";
-import { map } from "rxjs/operators";
 
 export interface PlayerCheckEvent {
   checked: boolean;
@@ -23,7 +23,7 @@ export interface PlayerCheckEvent {
   styleUrls: ["./players-list.component.scss"],
 })
 export class PlayersListComponent {
-  private readonly checkedIds = new BehaviorSubject<string[]>([]);
+  private readonly checkedIds$ = new BehaviorSubject<string[]>([]);
 
   @Input()
   public canEdit = false;
@@ -31,7 +31,7 @@ export class PlayersListComponent {
   @Input()
   public canSelect = false;
 
-  public readonly checkedPlayers: Observable<Player[]>;
+  public readonly checkedPlayers$: Observable<Player[]>;
 
   @Output()
   public playerCheck = new EventEmitter<PlayerCheckEvent>();
@@ -39,7 +39,7 @@ export class PlayersListComponent {
   @Output()
   public playerClick = new EventEmitter<Player>();
 
-  public readonly players: Observable<Player[]>;
+  public readonly players$: Observable<Player[]>;
 
   @Input()
   public showMaxMisses = true;
@@ -48,20 +48,22 @@ export class PlayersListComponent {
     private modalHelper: ModalHelperService,
     private storage: StorageService
   ) {
-    this.players = this.storage.players;
+    this.players$ = this.storage.getPlayers();
 
-    this.checkedPlayers = combineLatest([this.checkedIds, this.players])
-      .pipe(
-        map(([ids, players]) => {
-          return players.filter((player) => ids.some((x) => player.id === x));
-        })
-      );
+    this.checkedPlayers$ = combineLatest([
+      this.checkedIds$,
+      this.players$,
+    ]).pipe(
+      map(([ids, players]) => {
+        return players.filter((player) => ids.some((x) => player.id === x));
+      }),
+    );
   }
 
   public onPlayerCheckChange(e: Event, item: Player): void {
     const input = e.target as HTMLInputElement;
     const { id } = item;
-    const list = this.checkedIds.getValue();
+    const list = this.checkedIds$.getValue();
     const index = list.findIndex((x) => x === id);
 
     if (input.checked && index === -1) {
@@ -70,7 +72,7 @@ export class PlayersListComponent {
       list.splice(index, 1);
     }
 
-    this.checkedIds.next(list);
+    this.checkedIds$.next(list);
 
     this.playerCheck.emit({
       checked: input.checked,
@@ -102,7 +104,7 @@ export class PlayersListComponent {
     e.stopPropagation();
   }
 
-  public async  onPlayerShare(e: Event, item: Player): Promise<void> {
+  public async onPlayerShare(e: Event, item: Player): Promise<void> {
     this.modalHelper.showQrCode(`Share ${item.name}`, {
       id: item.id,
       type: "player",

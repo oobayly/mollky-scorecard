@@ -39,7 +39,7 @@ export class ModalHelperService {
 
   public async showEditScore(gameId: string, record: PlayerRecord): Promise<void> {
     const ref = this.modal.show(EditScoreComponent, {
-      "class": "modal-dialog-centered",
+      "class": "modal-dialog-centered modal-dialog-scrollable",
     });
 
     const component = ref.content as EditScoreComponent;

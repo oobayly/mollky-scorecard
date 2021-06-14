@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from "@angular/core";
-import { Game, PlayerRecord } from "../../../core/model";
-
-import { PlayersListComponent } from "../../../shared/players-list/players-list.component";
 import { Router } from "@angular/router";
-import { StorageService } from "../../../core/services/storage.service";
+import firebase from "firebase/app";
 import { Subscription } from "rxjs";
+
+import { Game } from "../../../core/model";
+import { PlayersListComponent } from "../../../shared/players-list/players-list.component";
+import { StorageService } from "../../../core/services/storage.service";
 
 @Component({
   selector: "app-new-game",
@@ -32,10 +33,11 @@ export class NewGameComponent implements AfterViewInit, OnDestroy {
     this.game = {
       currentPlayer: 0,
       id: null,
-      date: new Date(),
+      date: firebase.firestore.Timestamp.now(),
       players: [],
       resetScore: 25,
       targetScore: 50,
+      users: [],
     };
   }
 
@@ -44,15 +46,17 @@ export class NewGameComponent implements AfterViewInit, OnDestroy {
   }
 
   public ngAfterViewInit(): void {
-    const checkedSub = this.playerList.checkedPlayers.subscribe(
+    const checkedSub = this.playerList.checkedPlayers$.subscribe(
       (players) => {
         this.game.players = players.map((x) => {
           return {
+            id: x.id,
+            maxMisses: x.maxMisses,
             misses: 0,
-            player: x,
+            name: x.name,
             score: 0,
             scores: [],
-          } as PlayerRecord;
+          };
         });
       }
     );

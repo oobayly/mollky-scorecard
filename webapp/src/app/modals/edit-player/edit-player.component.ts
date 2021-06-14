@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-
 import { MDBModalRef } from "angular-bootstrap-md";
+
 import { Player } from "src/app/core/model";
 import { StorageService } from "src/app/core/services/storage.service";
 
@@ -33,7 +33,8 @@ export class EditPlayerComponent implements AfterViewInit {
       "id": [null],
       "maxMisses": [3, [Validators.required, Validators.min(1), Validators.max(99)]],
       "name": ["", [Validators.required]],
-      "wins": 0,
+      "users": [[]],
+      "wins": [0],
     });
   }
 
@@ -53,6 +54,8 @@ export class EditPlayerComponent implements AfterViewInit {
     }
 
     const player = Object.assign({}, this.playerForm.value);
+
+    console.log(player);
 
     if (this.isEditing) {
       await this.storage.updatePlayer(player);

@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "eslint -c .eslintrc.json --ext .ts src",
     "e2e": "ng e2e",
-    "build-prod": "ng build --prod",
+    "build-prod": "ng build --configuration production",
     "firebase-copy": "npm run build-prod && rsync -var --delete dist/webapp/* ../firebase/public"
   },
   "private": true,
@@ -34,7 +34,7 @@
     "angularx-qrcode": "^11.0.0",
     "animate.css": "^4.1.1",
     "eslint": "^7.28.0",
-    "firebase": "^8.6.7",
+    "firebase": "^8.3.3",
     "hammerjs": "^2.0.8",
     "rxjs": "^7.1.0",
     "tslib": "^2.3.0",

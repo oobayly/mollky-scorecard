@@ -19,7 +19,7 @@
 </div>
 
 <!-- League table -->
-<div class="container mt-4" *ngIf="leagueTable | async as table; else loading">
+<div class="container mt-4" *ngIf="leagueTable$ | async as table; else loading">
   <div *ngIf="table.length">
     <h5>League Table</h5>
 
@@ -36,7 +36,7 @@
 </div>
 
 <!-- Open games -->
-<div class="container mt-4" *ngIf="openGames | async as games">
+<div class="container mt-4" *ngIf="openGames$ | async as games">
   <div *ngIf="games.length">
     <h5>Open Games</h5>
 
@@ -47,12 +47,12 @@
         <div class="flex-grow-1">
           <div class="font-weight-bold">
             <mdb-icon fas icon="dice-d20" class="pr-1"></mdb-icon>
-            Started on {{game.date | date: "short"}}
+            Started on {{game.date.toDate() | date: "short"}}
           </div>
           <div>
             <!-- <mdb-icon fas icon="user" class="pr-1"></mdb-icon> -->
             <span class="game-players">
-              <span class="text-smaller" *ngFor="let player of game.players">{{player.player.name}}</span>
+              <span class="text-smaller" *ngFor="let player of game.players">{{player.name}}</span>
             </span>
           </div>
         </div>

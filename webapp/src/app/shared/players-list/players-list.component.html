@@ -1,4 +1,4 @@
-<ul class="list-group" *ngIf="players | async as items; else loading">
+<ul class="list-group" *ngIf="players$ | async as items; else loading">
   <li class="list-group-item d-flex align-items-center" *ngFor="let item of items; let i = index"
     (click)="onPlayerClick($event, item)">
 

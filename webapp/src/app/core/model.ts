@@ -1,13 +1,15 @@
+import firebase from "firebase/app";
+
 /** Represents a game. */
 export interface Game {
   /** The index of the current player. */
   currentPlayer: number;
 
   /** The date of the game. */
-  date: Date;
+  date: firebase.firestore.Timestamp;
 
   /** The ID of the game. */
-  id : string;
+  id: string;
 
   /** The list of players in the game. */
   players: PlayerRecord[];
@@ -18,15 +20,15 @@ export interface Game {
   /** The target score. */
   targetScore: number;
 
+  /** The list of users who have access to this game. */
+  users: string[];
+
   /** The player that won the game. */
-  winner?: Player;
+  winner?: string;
 }
 
-/** Represents a player */
-export interface Player {
-  /** The avatar photo of the player. */
-  avatar?: string;
-
+/** Represents a basic player record. */
+export interface PlayerBase {
   /** The ID of the player. */
   id: string;
 
@@ -35,18 +37,24 @@ export interface Player {
 
   /** The name of the player. */
   name: string;
+}
+
+/** Represents a player record. */
+export interface Player extends PlayerBase {
+  /** The avatar photo of the player. */
+  avatar?: string;
+
+  /** The list of users who have access to this game. */
+  users: string[];
 
   /** The number of wins that the player has had. */
   wins: number;
 }
 
 /** Represents a record of scores */
-export interface PlayerRecord {
+export interface PlayerRecord extends PlayerBase {
   /** The number of misses. */
   misses: number;
-
-  /** The player. */
-  player: Player;
 
   /** The current score. */
   score: number;
@@ -64,13 +72,13 @@ export interface ShareObject {
   type: "game" | "player";
 }
 
-export interface User {
-  /** The list of game IDs. */
-  gameIds: string[];
+// export interface User {
+//   /** The list of game IDs. */
+//   gameIds: string[];
 
-  /** The list of player IDs. */
-  playerIds: string[];
-}
+//   /** The list of player IDs. */
+//   playerIds: string[];
+// }
 
 /** Calculates the current score for the specified record in the game. */
 export function calculateScore(record: PlayerRecord, targetScore: number, resetScore: number): number {

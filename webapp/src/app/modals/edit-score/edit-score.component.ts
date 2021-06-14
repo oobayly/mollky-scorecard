@@ -1,9 +1,9 @@
-import { FormArray, FormBuilder, ValidatorFn, Validators } from "@angular/forms";
-import { PlayerRecord, calculateScore } from "../../core/model";
-import { first, map } from "rxjs/operators";
-
 import { Component } from "@angular/core";
+import { FormArray, FormBuilder, ValidatorFn, Validators } from "@angular/forms";
 import { MDBModalRef } from "angular-bootstrap-md";
+import { firstValueFrom } from "rxjs";
+
+import { PlayerRecord, calculateScore } from "../../core/model";
 import { StorageService } from "../../core/services/storage.service";
 
 @Component({
@@ -18,7 +18,7 @@ export class EditScoreComponent {
   public scoreForm: FormArray;
 
   public get playerName(): string {
-    return this.record?.player?.name;
+    return this.record?.name;
   }
 
   private record: PlayerRecord;
@@ -39,15 +39,12 @@ export class EditScoreComponent {
       return;
     }
 
-    const game = await this.storage.games.pipe(
-      first(),
-      map((games) => games.find((x) => x.id === this.gameId))
-    ).toPromise();
+    const game = await firstValueFrom(this.storage.getGame(this.gameId));
 
     this.record.scores = this.scoreForm.value;
     calculateScore(this.record, game.targetScore, game.resetScore);
 
-    const recordIndex = game.players.findIndex((x) => x.player.id === this.record.player.id);
+    const recordIndex = game.players.findIndex((x) => x.id === this.record.id);
 
     game.players[recordIndex] = this.record;
 
