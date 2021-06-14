@@ -1,9 +1,9 @@
-import { Observable, of } from "rxjs";
-import { first, map, mergeMap } from "rxjs/operators";
-
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Injectable } from "@angular/core";
+import firebase from "firebase/app";
+import { Observable, of } from "rxjs";
+import { first, map, mergeMap } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root",

@@ -1,12 +1,11 @@
-import * as firebase from "firebase/app";
-
+import { Injectable } from "@angular/core";
 import { AngularFirestore, DocumentReference } from "@angular/fire/firestore";
-import { Game, Player, User } from "../model";
+import firebase from "firebase/app";
 import { Observable, of } from "rxjs";
 import { first, map, mergeMap } from "rxjs/operators";
 
+import { Game, Player, User } from "../model";
 import { AuthService } from "./auth.service";
-import { Injectable } from "@angular/core";
 
 enum Collections {
   Games = "games",
