@@ -1,5 +1,6 @@
-import { AuthService } from "./core/services/auth.service";
 import { Component } from "@angular/core";
+import { AngularFireAuth } from "@angular/fire/auth";
+import { environment } from "../environments/environment";
 
 @Component({
   selector: "app-root",
@@ -10,7 +11,13 @@ export class AppComponent {
   public title = "webapp";
 
   public constructor(
-    private auth: AuthService
+    auth: AngularFireAuth
   ) {
+    if (!environment.production) {
+      auth.idTokenResult.subscribe((x) => {
+        console.log(x.claims["sub"]);
+        console.log(x.token);
+      });
+    }
   }
 }
