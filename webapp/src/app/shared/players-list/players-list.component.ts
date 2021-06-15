@@ -105,10 +105,9 @@ export class PlayersListComponent {
   }
 
   public async onPlayerShare(e: Event, item: Player): Promise<void> {
-    this.modalHelper.showQrCode(`Share ${item.name}`, {
-      id: item.id,
-      type: "player",
-    });
+    const uri = `${document.location.origin}/link/player/${item.id}`;
+
+    this.modalHelper.showQrCode(`Share ${item.name}`, uri);
 
     e.stopPropagation();
   }

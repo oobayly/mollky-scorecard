@@ -3,7 +3,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore } from "@angular/fire/firestore";
 import firebase from "firebase/app";
 import { firstValueFrom, Observable } from "rxjs";
-import { filter, map, mergeMap } from "rxjs/operators";
+import { filter, first, map, mergeMap } from "rxjs/operators";
 
 import { Game, Player } from "../model";
 
@@ -48,6 +48,7 @@ export class StorageService {
 
   public getGame(id: string): Observable<Game> {
     return this.firestore.collection<Game>(Collections.Games).doc(id).get().pipe(
+      first(),
       map((doc) => doc.data())
     );
   }
@@ -75,6 +76,7 @@ export class StorageService {
 
   public getPlayer(id: string): Observable<Player> {
     return this.firestore.collection<Player>(Collections.Players).doc(id).get().pipe(
+      first(),
       map((doc) => doc.data())
     );
   }
@@ -95,6 +97,8 @@ export class StorageService {
     const { uid } = await this.auth.currentUser;
     const playerRef = this.firestore.collection<Player>(Collections.Players).doc(id);
     const player = (await firstValueFrom(playerRef.get())).data();
+
+    console.log(playerRef.ref.path);
 
     if (!player) {
       throw new Error("No player could be found.");
