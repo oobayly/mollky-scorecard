@@ -136,7 +136,7 @@ export class StorageService {
   public async removePlayer(id: string): Promise<void> {
     const { uid } = await this.auth.currentUser;
 
-    const playerRef = this.firestore.collection<Player>(Collections.Games).doc(id);
+    const playerRef = this.firestore.collection<Player>(Collections.Players).doc(id);
     const player = (await firstValueFrom(playerRef.get())).data();
 
     if (player == null) {
