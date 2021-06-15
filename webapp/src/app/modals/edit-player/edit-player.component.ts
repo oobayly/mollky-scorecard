@@ -55,8 +55,6 @@ export class EditPlayerComponent implements AfterViewInit {
 
     const player = Object.assign({}, this.playerForm.value);
 
-    console.log(player);
-
     if (this.isEditing) {
       await this.storage.updatePlayer(player);
     } else {

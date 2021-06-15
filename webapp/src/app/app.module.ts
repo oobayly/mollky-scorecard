@@ -25,7 +25,7 @@ registerLocaleData(localeGB);
 
 // See https://stackoverflow.com/a/65514850/422689
 const fbApp = firebase.initializeApp(environment.firebaseConfig, "fbApp");
-if (!environment.production) {
+if (environment.useEmulator) {
   fbApp.auth().useEmulator("http://localhost:9099");
   fbApp.firestore().useEmulator("localhost", 8080);
 }
