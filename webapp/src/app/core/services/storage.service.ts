@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore } from "@angular/fire/firestore";
-import firebase from "firebase/app";
 import { firstValueFrom, Observable } from "rxjs";
 import { filter, first, map, mergeMap } from "rxjs/operators";
 
@@ -174,13 +173,6 @@ export class StorageService {
     this.validateGame(game);
 
     const ref = this.firestore.collection(Collections.Games).doc(game.id);
-
-    if (game.winner) {
-      const playerRef = this.firestore.firestore.collection(Collections.Players).doc(game.winner);
-      const increment = firebase.firestore.FieldValue.increment(1);
-
-      await playerRef.update({ wins: increment });
-    }
 
     await ref.update(game);
   }

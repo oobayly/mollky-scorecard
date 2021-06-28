@@ -46,9 +46,6 @@ export interface Player extends PlayerBase {
 
   /** The list of users who have access to this game. */
   users: string[];
-
-  /** The number of wins that the player has had. */
-  wins: number;
 }
 
 /** Represents a record of scores */

@@ -22,7 +22,7 @@ export class HomeComponent {
   ) {
     this.leagueTable$ = this.storage.getPlayers().pipe(
       map((players) => {
-        return players.sort((a, b) => b.wins - a.wins);
+        return players.sort((a, b) => a.name.localeCompare(b.name));
       })
     );
 
