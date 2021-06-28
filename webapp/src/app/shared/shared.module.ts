@@ -6,7 +6,6 @@ import { LoaderComponent } from "./loader/loader.component";
 import { NgModule } from "@angular/core";
 import { PlayersListComponent } from "./players-list/players-list.component";
 import { QRCodeModule } from "angularx-qrcode";
-import { ZXingScannerModule } from "@zxing/ngx-scanner";
 
 @NgModule({
   declarations: [LoaderComponent, PlayersListComponent],
@@ -21,7 +20,6 @@ import { ZXingScannerModule } from "@zxing/ngx-scanner";
     InputsModule,
     // Other
     QRCodeModule,
-    ZXingScannerModule,
   ],
   exports: [
     FormsModule,
@@ -36,7 +34,6 @@ import { ZXingScannerModule } from "@zxing/ngx-scanner";
     PlayersListComponent,
     // Other
     QRCodeModule,
-    ZXingScannerModule,
   ],
 })
 export class SharedModule { }
