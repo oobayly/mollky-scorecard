@@ -14,7 +14,7 @@ import { StorageService } from "../../core/services/storage.service";
 export class HomeComponent {
   public readonly leagueTable$: Observable<Player[]>;
 
-  public readonly openGames$ : Observable<Game[]>;
+  public readonly openGames$: Observable<Game[]>;
 
   public constructor(
     private modalHelper: ModalHelperService,
@@ -40,6 +40,15 @@ export class HomeComponent {
           this.storage.removeGame(game.id);
         }
       });
+
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  public onGameShareClick(e: Event, game: Game): void {
+    const uri = `${document.location.origin}/link/game/${game.id}`;
+
+    this.modalHelper.showQrCode("Share Game", uri);
 
     e.preventDefault();
     e.stopPropagation();

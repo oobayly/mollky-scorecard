@@ -1,10 +1,8 @@
 import { Component } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/auth";
-import { of } from "rxjs";
-import { first, map, mergeMap, tap } from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 import { environment } from "../environments/environment";
-import { AppRoutingModule } from "./app-routing.module";
 
 @Component({
   selector: "app-root",

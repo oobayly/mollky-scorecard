@@ -93,12 +93,28 @@ export class StorageService {
     );
   }
 
+  public async importGame(id: string): Promise<void> {
+    const { uid } = await this.auth.currentUser;
+    const gameRef = this.firestore.collection<Game>(Collections.Games).doc(id);
+    const game = (await firstValueFrom(gameRef.get())).data();
+
+    if (!game) {
+      throw new Error("No game could be found.");
+    }
+
+    if (!game.users.some((u) => u === uid)) {
+      game.users.push(uid);
+    }
+
+    await gameRef.update({
+      users: game.users,
+    });
+  }
+
   public async importPlayer(id: string): Promise<void> {
     const { uid } = await this.auth.currentUser;
     const playerRef = this.firestore.collection<Player>(Collections.Players).doc(id);
     const player = (await firstValueFrom(playerRef.get())).data();
-
-    console.log(playerRef.ref.path);
 
     if (!player) {
       throw new Error("No player could be found.");

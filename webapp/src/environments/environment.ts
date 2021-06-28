@@ -7,7 +7,7 @@ import { firebaseConfig } from "./firebase-config";
 export const environment = {
   production: false,
   firebaseConfig: firebaseConfig,
-  useEmulator: true,
+  useEmulator: false,
 };
 
 /*
