@@ -19,16 +19,8 @@
 </div>
 
 <!-- League table -->
-<div class="container mt-4" *ngIf="leagueTable$ | async as table; else loading">
-  <div *ngIf="table.length">
-    <h5>League Table</h5>
-
-    <ul class="list-group">
-      <li class="list-group-item" *ngFor="let player of table">
-        <span>{{player.name}}</span>
-      </li>
-    </ul>
-  </div>
+<div class="container mt-4">
+  <app-players-list #playerList [canEdit]="true"></app-players-list>
 </div>
 
 <!-- Open games -->

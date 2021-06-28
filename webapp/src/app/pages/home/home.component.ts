@@ -1,8 +1,7 @@
 import { Component } from "@angular/core";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
 
-import { Game, Player } from "../../core/model";
+import { Game } from "../../core/model";
 import { ModalHelperService } from "../../core/services/modal-helper.service";
 import { StorageService } from "../../core/services/storage.service";
 
@@ -12,20 +11,12 @@ import { StorageService } from "../../core/services/storage.service";
   styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent {
-  public readonly leagueTable$: Observable<Player[]>;
-
   public readonly openGames$: Observable<Game[]>;
 
   public constructor(
     private modalHelper: ModalHelperService,
     private storage: StorageService
   ) {
-    this.leagueTable$ = this.storage.getPlayers().pipe(
-      map((players) => {
-        return players.sort((a, b) => a.name.localeCompare(b.name));
-      })
-    );
-
     this.openGames$ = this.storage.getOpenGames();
   }
 

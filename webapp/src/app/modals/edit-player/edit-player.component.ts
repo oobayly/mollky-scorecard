@@ -34,7 +34,6 @@ export class EditPlayerComponent implements AfterViewInit {
       "maxMisses": [3, [Validators.required, Validators.min(1), Validators.max(99)]],
       "name": ["", [Validators.required]],
       "users": [[]],
-      "wins": [0],
     });
   }
 

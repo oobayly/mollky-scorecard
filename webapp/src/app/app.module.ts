@@ -17,7 +17,6 @@ import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { HomeComponent } from "./pages/home/home.component";
 import { ModalsModule } from "./modals/modals.module";
-import { PlayersComponent } from "./pages/players/players.component";
 import { SharedModule } from "./shared/shared.module";
 import { environment } from "../environments/environment";
 
@@ -34,7 +33,6 @@ if (environment.useEmulator) {
   declarations: [
     AppComponent,
     HomeComponent,
-    PlayersComponent,
   ],
   imports: [
     BrowserModule,
