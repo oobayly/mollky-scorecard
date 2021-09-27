@@ -46,9 +46,8 @@ export class StorageService {
   }
 
   public getGame(id: string): Observable<Game> {
-    return this.firestore.collection<Game>(Collections.Games).doc(id).get().pipe(
-      first(),
-      map((doc) => doc.data())
+    return this.firestore.collection<Game>(Collections.Games).doc(id).snapshotChanges().pipe(
+      map((doc) => doc.payload.data())
     );
   }
 

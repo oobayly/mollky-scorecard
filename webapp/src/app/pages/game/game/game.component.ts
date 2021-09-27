@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { first } from "rxjs/operators";
+import { Subscription } from "rxjs";
 
 import { Game, PlayerRecord, calculateScore } from "../../../core/model";
 import { ModalHelperService } from "../../../core/services/modal-helper.service";
@@ -40,6 +40,8 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     return this.game.targetScore - (this.currentPlayer?.score || 0);
   }
 
+  private readonly subscriptions: Subscription[] = [];
+
   public constructor(
     private modalHelper: ModalHelperService,
     private route: ActivatedRoute,
@@ -49,9 +51,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   ) {
     const gameId = this.route.snapshot.params["id"];
 
-    this.storage.getGame(gameId).pipe(
-      first()
-    ).subscribe((game) => {
+    const gameSub = this.storage.getGame(gameId).subscribe((game) => {
       if (!game) {
         router.navigateByUrl("/");
 
@@ -60,6 +60,8 @@ export class GameComponent implements AfterViewInit, OnDestroy {
 
       this.game = game;
     });
+
+    this.subscriptions.push(gameSub);
   }
 
   public ngAfterViewInit(): void {
@@ -82,6 +84,8 @@ export class GameComponent implements AfterViewInit, OnDestroy {
           //
         });
     }
+
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
   private clearPins(): void {

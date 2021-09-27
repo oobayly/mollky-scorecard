@@ -40,13 +40,10 @@ export class EditScoreComponent {
     }
 
     const game = await firstValueFrom(this.storage.getGame(this.gameId));
+    const record = game.players.find((x) => x.id === this.record.id);
 
-    this.record.scores = this.scoreForm.value;
-    calculateScore(this.record, game.targetScore, game.resetScore);
-
-    const recordIndex = game.players.findIndex((x) => x.id === this.record.id);
-
-    game.players[recordIndex] = this.record;
+    record.scores = this.scoreForm.value;
+    calculateScore(record, game.targetScore, game.resetScore);
 
     this.storage.updateGame(game);
 
