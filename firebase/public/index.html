@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="15; url=https://bayly.eu/useful-stuff/molkky" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mölkky Scorecard has moved</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #333;
+    }
+
+    .message {
+      max-width: 600px;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 1em;
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="message">
+    <h1>Mölkky Scorecard has moved.</h1>
+    <p>
+      You will be redirected to the new site:<br />
+      <strong><a href="https://bayly.eu/useful-stuff/molkky">bayly.eu</a></strong><br /><br />
+      Please update your bookmarks, remove any shortcuts or app versions of this site,
+      and use the new address going forward.<br /><br />
+      Redirecting in <span id="remaining">15.0 seconds</span>&hellip;
+    </p>
+  </div>
+</body>
+
+<script>
+  let remaining = 15;
+  window.setInterval(() => {
+    remaining = Math.max(0, remaining - 0.1);
+
+    document.getElementById("remaining").innerText = `${remaining.toFixed(1)} second${(remaining === 1 ? '': 's')}`;
+  }, 100);
+</script>
+
+</html>
